@@ -4,4 +4,6 @@ import Cocoa
 
 var str = "Hello, iOS World!"
 
-print(str)
+let txt = "\nCommit practice"
+
+print(str); print(txt)
