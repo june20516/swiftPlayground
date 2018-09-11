@@ -68,3 +68,19 @@ print("\(a) × 8 = \(b)")
 b = a * 9
 print("\(a) × 9 = \(b)")
 
+
+// 6,7단 - 반복문 사용
+a = 6
+print("\(a)단")
+var i = 1
+while ( i < 10) {
+    print("\(a) × \(i) = \(a*i)")
+    i += 1
+}
+
+a = 7
+print("\(a)단")
+for j in 1..<10 {
+    print("\(a) × \(j) = \(a*j)")
+}
+
