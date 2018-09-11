@@ -106,12 +106,18 @@ import Cocoa
 //
 
 
-var result2 = Array(repeating: 0, count: 9)
+var results = [Int].init(repeating: 0, count: 9)
 
-for i in 1..<10 {
-    result2[i-1]=(2*i)
+func gugu(number: Int) { //callee
+    for i in 1..<10 {
+        results[i-1]=(number * i)
+    }
+    for i in 1..<10 {
+        print("\(number) × \(i) = \(results[i-1])")
+    }
 }
 
-for j in 1..<10 {
-    print("2 × \(j) = \(result2[j-1])")
+for i in 2..<10 {
+    print("\(i)단")
+    gugu(number: i)  //caller
 }
