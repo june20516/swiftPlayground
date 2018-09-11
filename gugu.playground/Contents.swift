@@ -2,6 +2,7 @@
 
 import Cocoa
 
+//2,3단 - 계산 후 출력
 print("2단")
 print("2 × 2 = \(2*2)")
 print("2 × 3 = \(2*3)")
@@ -21,4 +22,49 @@ print("3 × 6 = \(3*6)")
 print("3 × 7 = \(3*7)")
 print("3 × 8 = \(3*8)")
 print("3 × 9 = \(3*9)")
+
+
+//4,5단 - 변수 사용
+var a: Int = 4
+
+print("\(a)단")
+var b = a * 1
+print("\(a) × 1 = \(b)")
+b = a * 2
+print("\(a) × 2 = \(b)")
+b = a * 3
+print("\(a) × 3 = \(b)")
+b = a * 4
+print("\(a) × 4 = \(b)")
+b = a * 5
+print("\(a) × 5 = \(b)")
+b = a * 6
+print("\(a) × 6 = \(b)")
+b = a * 7
+print("\(a) × 7 = \(b)")
+b = a * 8
+print("\(a) × 8 = \(b)")
+b = a * 9
+print("\(a) × 9 = \(b)")
+
+a = 5
+print("\(a)단")
+b = a * 1
+print("\(a) × 1 = \(b)")
+b = a * 2
+print("\(a) × 2 = \(b)")
+b = a * 3
+print("\(a) × 3 = \(b)")
+b = a * 4
+print("\(a) × 4 = \(b)")
+b = a * 5
+print("\(a) × 5 = \(b)")
+b = a * 6
+print("\(a) × 6 = \(b)")
+b = a * 7
+print("\(a) × 7 = \(b)")
+b = a * 8
+print("\(a) × 8 = \(b)")
+b = a * 9
+print("\(a) × 9 = \(b)")
 
