@@ -106,15 +106,16 @@ for i in 2..<10 {
 
 
 // 구구단 마무리 - 배열과 서브루틴
-func gugu(number: Int) {
+func gugu(number: Int) -> String {
     var results = [Int].init(repeating: 0, count: 9)
+    var str: String = ""
     for i in 1..<10 {
         results[i-1]=(number * i)
-        print("\(number) × \(i) = \(results[i-1])")
+        str += "\(number) × \(i) = \(results[i-1])\n"
     }
+        return(str)
 }
 
 for i in 2..<10 {
-    print("\(i)단")
-    gugu(number: i)
+    print(gugu(number: i))
 }
