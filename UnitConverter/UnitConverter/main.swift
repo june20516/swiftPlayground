@@ -8,73 +8,95 @@
 
 import Foundation
 
-let inputValue = readLine()!  //값 입력 받기
+
+let constantToCentimeter: [String: Double] = [  // fromUnit이 cm가 되기 위한 상수
+    "cm": 1,
+    "m": 100,
+    "inch": 2.54,
+    "yard": 91.44
+]
+
+func inputValue() -> String {
+    let inputValue = readLine()!  //값 입력 받기
+    return inputValue
+}
 
 func extractNumeric(_ input: String) -> Double { //숫자 값 추출
-    var numeric: Double = -1
+    var numericValue: Double = -1
     if let optionalNumeric =
         Double(input.components(separatedBy: CharacterSet(charactersIn: "01234567890.").inverted).joined(separator: "")) {
-        numeric = optionalNumeric
+        numericValue = optionalNumeric
     }
-    return numeric
+    return numericValue
 }
 
-func extractUnits(_ input: String) -> (startUnit: String, endUnit: String) { //단위 추출
-    var units: [String] = ["",""]
-    let strUnits = input.components(separatedBy: CharacterSet(charactersIn: "0123456789.")).joined(separator: "") //숫자를 제거한 배열
-    if strUnits.contains(" ") { //단위가 2개인 경우
-        units = strUnits.components(separatedBy: " ") //공백으로 나눠 배열 저장
-    } else {  //아닌경우
-        units = [strUnits, ""]  //배열 크기 고정
+func extractUnits(_ input: String) -> [String] { //단위 추출
+    let units = input.trimmingCharacters(in: CharacterSet(charactersIn: "0123456789.")).components(separatedBy: " ") //숫자를 제거한 배열
+    return units
+}
+
+func inputToCentimeter(numericValue: Double, units: [String]) -> Double {  // 지원하지 않는 단위이면 -1 반환
+    guard let constant = constantToCentimeter[units[0]] else {
+        return -1
     }
-    return (units[0], units[1])
-}
-
-func convertCentimeterToMeter(_ numeric: Double) -> Double { // cm 값을 m 값으로 변환
-    return numeric / 100
-}
-
-func convertCentimeterToInch(_ numeric: Double) -> Double { // cm 값을 inch 값으로 변환
-    return numeric / 2.54
-}
-
-func convertMeterToCentimeter(_ numeric: Double) -> Double { // m 값을 cm 값으로 변환
-    return numeric * 100
-}
-
-func convertMeterToInch(_ numeric: Double) -> Double { // m 값을 inch 값으로 변환
-    return numeric / 0.0254
-}
-
-func convertInchToCentimeter(_ numeric: Double) -> Double { // inch 값을 cm 값으로 변환
-    return numeric * 2.54
-}
-
-func convertInchToMeter(_ numeric: Double) -> Double { // inch 값을 mm 값으로 변환
-    return numeric * 0.0254
+    return (numericValue * constant)
 }
 
 
+func cmToTarget(numericValue: Double, units: [String]) -> Double {
+    guard let constant = constantToCentimeter[units[1]] else {
+        return -1
+    }
+    return (numericValue / constant)
+}
 
-func unitConvertor(_ input: String) -> String { // 단위에 따른 액션
-    let numeric = extractNumeric(input)
-    switch (extractUnits(input)) {
-    case ("cm","inch") :
-        return String(convertCentimeterToInch(numeric)) + extractUnits(input).endUnit
-    case ("cm",_) :
-        return String(convertCentimeterToMeter(numeric)) + "m"
-    case ("m","inch") :
-        return String(convertMeterToInch(numeric)) + extractUnits(input).endUnit
-    case ("m",_) :
-        return String(convertMeterToCentimeter(numeric)) + "cm"
-    case ("inch","cm") :
-        return String(convertInchToCentimeter(numeric)) + extractUnits(input).endUnit
-    case ("inch","m") :
-        return String(convertInchToMeter(numeric)) + extractUnits(input).endUnit
+
+func convertSingleUnit (_ middleValue: Double, fromUnit: String) -> (convertedValue: Double, convertedUnit: String) {
+    switch fromUnit {
+    case "m" :
+        return (middleValue, "cm")
+    case "cm" :
+        return (middleValue / constantToCentimeter["m"]!, "m")
+    case "yard" :
+        return (middleValue / constantToCentimeter["m"]!, "m")
     default :
-        return "지원하지 않는 단위입니다"
+        return (0, "단위를 확인해주세요")
     }
 }
 
-print(unitConvertor(inputValue))
+
+func printResult (resultValue: Double, toUnit: String) {
+    print("\(resultValue)\(toUnit)")
+}
+
+func excecuteConverting(_ input: String) {
+    let inputedValue = input
+    let numericValue = extractNumeric(inputedValue)
+    let units = extractUnits(inputedValue)
+    let middleValue = inputToCentimeter(numericValue: numericValue, units: units)
+    print("middleValue \(middleValue)cm")
+    if units.count == 2 {
+        let resultValue = cmToTarget(numericValue: middleValue, units: units)
+        let toUnit = units[1]
+        printResult(resultValue: resultValue, toUnit: toUnit)
+    } else {
+        let singleResultValue = convertSingleUnit(middleValue, fromUnit: units[0])
+        printResult(resultValue: singleResultValue.convertedValue, toUnit: singleResultValue.convertedUnit)
+    }
+}
+
+
+func main() {
+    while true {
+        let inputedValue = inputValue()
+        if inputedValue == "q" || inputedValue == "quit" {
+            print("종료합니다")
+            return
+        } else {
+            excecuteConverting(inputedValue)
+        }
+    }
+}
+
+main()
 
