@@ -13,6 +13,11 @@ import Foundation
 
 //값 입력 받기
 func inputValue() -> String {
+    print("\n------------변환 가능한 단위-----------")
+    print("--무게 : \(findConstant(units: ["g"]).keys)")
+    print("--길이 : \(findConstant(units: ["m"]).keys)")
+    print("-----입력형식 : 000cm  <---모든 단위 출력")
+    print("--입력형식 : 000cm inch  <-해당 단위 출력")
     let inputValue = readLine()!
     return inputValue
 }
@@ -54,31 +59,18 @@ func middleValueToTargetValue(numericValue: Double, units: [String], constants: 
 }
 
 // 한가지 단위일 때 변환
-func convertSingleUnit (_ middleValue: Double, fromUnit: String, constants: [String: Double]) -> (convertedValue: Double, convertedUnit: String) {
-    switch fromUnit {
-    case "m" :
-        return (middleValue, "cm")
-    case "cm" :
-        return (middleValue / constants["m"]!, "m")
-    case "yard" :
-        return (middleValue / constants["m"]!, "m")
-    case "g" :
-        return (middleValue / constants["kg"]!, "kg")
-    case "kg" :
-        return (middleValue, "g")
-    default :
-        return (-1, "단위를 확인해주세요")
+func convertSingleUnit (_ middleValue: Double, fromUnit: String, constants: [String: Double]) -> String {
+    var singleUnitResult: String = " convertedAll "
+    if constants.keys.contains(fromUnit) {
+        for (unit, constant) in constants {
+            singleUnitResult += "\n\(middleValue * constant)\(unit)"
+        }
+        return singleUnitResult
     }
+    return "단위를 확인해주세요"
 }
 
-func printResult (resultValue: Double, toUnit: String) {
-    if resultValue == -1 {
-        print("지원하지 않는 단위입니다")  // 단위가 잘못 됐을 때 출력됨
-    } else {
-        print("\(resultValue)\(toUnit)")
-    }
-}
-
+//입력받은 단위를 토대로 상수 딕셔너리 반환
 func findConstant(units: [String]) -> [String: Double] {
     // fromUnit이 cm가 되기 위한 상수
     let constantsToCentimeter: [String: Double] = [
@@ -103,24 +95,30 @@ func findConstant(units: [String]) -> [String: Double] {
     }
 }
 
-func excecuteConverting(_ input: String) -> (resultValue: Double, toUnit: String) {
+//결과값을 출력
+func printResult (resultValue: Any) {
+    print(resultValue)
+}
+
+
+func excecuteConverting(_ input: String) -> Any {
     let numericValue = extractNumeric(input)
     let units = extractUnits(input)
     let categoryOfUnit = findConstant(units: units)
     let middleValue = inputToMiddleValue(numericValue: numericValue, units: units, constants: categoryOfUnit).value
-    print("middleValue(cm,g) \(middleValue)\(units)")   // 확인용
     switch units.count {
     case 1:
         let singleUnitResults = convertSingleUnit(middleValue, fromUnit: units[0], constants: categoryOfUnit)
-        let resultValue = singleUnitResults.convertedValue
-        let toUnit = singleUnitResults.convertedUnit
-        return (resultValue, toUnit)
+        return singleUnitResults
     case 2:
         let resultValue = middleValueToTargetValue(numericValue: middleValue, units: units, constants: categoryOfUnit)
-        let toUnit = units[1]
-        return (resultValue, toUnit)
+        if resultValue == -1 {
+            return "단위를 확인해주세요"
+        } else {
+        return "\(resultValue)\(units[1])"
+        }
     default:
-        return(-1, "단위를 확인해주세요")
+        return "단위를 확인해주세요"
     }
 }
 
@@ -132,7 +130,7 @@ func main() {
             return
         } else {
             let convertedResults = excecuteConverting(inputedValue)
-            printResult(resultValue: convertedResults.resultValue, toUnit: convertedResults.toUnit)
+            printResult(resultValue: convertedResults)
         }
     }
 }
